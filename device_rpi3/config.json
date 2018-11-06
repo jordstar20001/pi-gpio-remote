@@ -1,8 +1,13 @@
 {
+  "name":"Jordan's Rasp.Pi3",
+
   "streams":[
     "lightshow"
   ],
 
+
   "server_address":"10.0.0.29:8080",
+  "is_lan":true,
+  ""
   "this_port":8080
 }

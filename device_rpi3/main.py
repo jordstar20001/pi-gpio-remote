@@ -2,7 +2,7 @@
 # This program is for the device Raspberry Pi 3 Model B
 from flask import Flask, request, make_response, jsonify
 
-import requests
+import requests as reqs
 import json
 
 import gpiozero as pio
@@ -14,19 +14,30 @@ config = {}
 with open('config.json') as f:
     config = json.load(f)
 
-streams = config.streams
+streams = config['streams']
 
-serverAddress = config.server_address
+server_address = config['server_address']
 
-dev_port = config.this_port
+dev_port = config['this_port']
+
+device_name = config['name']
 
 # Subscribe to the server.
+
+reqs.post(server_address + "/new_subscription", {
+    "device_name":device_name,
+    ""
+})
 
 device = Flask(__name__)
 
 # RUNTIME VARS -----
 
 subs = streams
+
+@device.route("/heartbeat", methods=["GET"])
+def heartbeat():
+    return make_response(), 200
 
 @device.route("/new_instructions", methods=["POST"])
 def instructions_received():

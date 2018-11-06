@@ -1,0 +1,6 @@
+{
+  "max_devices":10,
+  "streams":[
+    "foo"
+  ]
+}
