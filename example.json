@@ -1,0 +1,98 @@
+*** This JSON file is just an example of all the JSONs that will be used throughout the server
+
+
+
+
+*** new client WAN FROMDEVICE
+{
+  "server_address":"10.0.0.138:8080",
+  "name":"Cat Food Dispenser"
+}
+
+*** new client LAN FROMDEVICE
+{
+  "server_address":"10.0.0.33:8080",
+  "name":"Cat Food Dispenser"
+}
+
+*** The server will create a random HEX string and use that as a key to a dictionary with above data.
+*** The server then sends back the ID so the device knows how to identify themselves
+
+*** new client WAN/LAN TODEVICE
+{
+  "id":"c34f1b8902af"
+}
+
+*** get all stream names
+*** data back:
+{
+  "streams":[
+    "catfood", "foo"
+  ]
+}
+
+*** device subscription to stream, this will make it so that the server will send the data to the server.
+{
+  "id":"c34f1b8902af",
+  "stream":"lights"
+}
+
+*** server device control
+*** The following component types are supported :
+- led
+- variled
+- buzzer
+- servo
+
+*** The following actions can be performed upon each:
+
+- led: ON, OFF, TOGGLE
+- variled: SET, (value: from 0.0 to 1.0)
+- buzzer: ON, OFF, TOGGLE
+- servo: MIN, MAX, MID
+
+** An optional "delay" (in ms) can be used after each instruction
+** The instructions will be executed in order.
+** All instructions are (currently) synchronous
+{
+  "stream":"foo",
+  "title":"something",
+  "loops":3,
+  "instructions":[
+    {
+      "pin":23,
+      "component_type":"led",
+      "action": "ON",
+      "delay": 2000
+    },
+
+    {
+      "pin": 24,
+      "component_type":"variled",
+      "action": "SET",
+      "value": 0.4,
+      "delay": 0
+    },
+
+    {
+      "pin": 5,
+      "component_type":"buzzer",
+      "action": "TOGGLE",
+      "value": 0.4,
+      "delay": 500
+    },
+
+    {
+      "pin": 6,
+      "component_type":"servo",
+      "action": "MAX",
+      "delay": 500
+    },
+
+    {
+      "pin": 6,
+      "component_type":"servo",
+      "action": "MIN"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "streams":[
+    "lightshow"
+  ],
+
+  "server_address":"10.0.0.29:8080",
+  "this_port":8080
+}
