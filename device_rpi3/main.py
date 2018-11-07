@@ -89,21 +89,25 @@ def heartbeat():
 @device.route("/new_instructions", methods=["POST"])
 def instructions_received():
     data = request.get_json()
-    if data.stream not in subs:
+    if data['stream'] not in subs:
         return make_response(), 400
 
 
     else:
-        print("Performing " + data['title'] + " from " + data['stream'])
-        instructions = data['instructions']
         try:
+            print("Performing " + data['title'] + " from " + data['stream'])
+            #instructions = data['instructions']
+            print("LOOOOOOOOOOOOOOOOOOP : " + data["loops"])
+
             for i in range(0, data['loops'] - 1):
+                print("LOOP #" + str(i))
                 for instruct in instructions:
                     pin = instruct['pin']
                     component = instruct['component_type']
                     action = instruct['action']
                     delay = instruct['delay']
                     if component == "led":
+                        print("LED!!!!!!!!!!!!!!!!")
                         light = pio.LED(pin)
                         if action == "ON":
                             light.on()
@@ -141,8 +145,10 @@ def instructions_received():
                         elif action == "MID":
                             servo.mid()
 
+                    time.sleep(delay / 1000)
+
             return make_response(), 200
-        except:
-            print("Ooooops! Something went wrong...")
+        except Exception as e:
+            print("Ooooops! Something went wrong... " + e)
             return make_response(), 402
 device.run("0.0.0.0", device_port)
