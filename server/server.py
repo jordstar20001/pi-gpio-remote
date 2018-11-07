@@ -3,6 +3,7 @@
 from flask import Flask, request, make_response, jsonify
 
 import requests as reqs
+
 import json
 import os
 import codecs
@@ -75,8 +76,10 @@ def send_action_to_devices():
             device_name = dev["device_name"]
             print("Sending " + title + " from stream " + stream + " to device " + device_name + " at IP: " + device_address + "...")
             print(r_data)
-            info = reqs.post(device_address + "/new_instructions", json=r_data)
-            print(info)
+            try:
+                info = reqs.post(device_address + "/new_instructions", json=r_data, timeout=0.01)
+            except requests.exceptions.ReadTimeout:
+                pass
 
     return make_response(), 200
 

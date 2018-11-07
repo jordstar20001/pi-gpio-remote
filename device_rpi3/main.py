@@ -118,10 +118,14 @@ def instructions_received():
                     elif action == "TOGGLE":
                         light.toggle()
 
+                    light.close()
+
                 elif component == "variled":
                     light = pio.PWMLED(pin)
                     if action == "SET":
                         light.value = instruct['value']
+
+                    light.close()
 
                 elif component == "buzzer":
                     bz = pio.Buzzer(pin)
@@ -134,6 +138,8 @@ def instructions_received():
                     elif action == "TOGGLE":
                         bz.toggle()
 
+                    bz.close();
+
                 elif component == "servo":
                     servo = pio.Servo(pin)
                     if action == "MIN":
@@ -145,8 +151,10 @@ def instructions_received():
                     elif action == "MID":
                         servo.mid()
 
+                    servo.close()
+
                 time.sleep(delay / 1000)
 
         return make_response(), 200
 
-device.run("0.0.0.0", device_port)
+device.run("0.0.0.0", device_port, debug=True)

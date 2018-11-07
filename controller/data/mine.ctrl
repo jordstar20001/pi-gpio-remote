@@ -5,15 +5,15 @@
   "instructions":[
     {
       "pin":17,
-      "component_type":"variled",
-      "action": "SET",
+      "component_type":"led",
+      "action": "ON",
       "value":1.0,
       "delay": 200
     },
     {
       "pin":17,
-      "component_type":"variled",
-      "action": "SET",
+      "component_type":"led",
+      "action": "OFF",
       "value":0.0,
       "delay": 0
     }
