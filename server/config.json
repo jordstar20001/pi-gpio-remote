@@ -1,7 +1,7 @@
 {
   "max_devices":10,
   "streams":[
-    "foo"
+    "lightshow"
   ],
   "port":8080
 }

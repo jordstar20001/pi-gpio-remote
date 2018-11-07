@@ -46,7 +46,7 @@ def new_subscription():
     device_id = data['id']
     stream = data['stream']
     if stream in streams_available:
-        subscribers[device_id][streams].append(stream)
+        subscribers[device_id]['streams'].append(stream)
         return make_response(), 200
 
     else:
@@ -68,13 +68,17 @@ def send_action_to_devices():
         return make_response(), 404
 
     for device in subscribers:
-        if stream in device[streams]:
+        dev = subscribers[device]
+        if stream in dev['streams']:
             # Send instructions to the device
-            device_address = device["device_ip"]
-            device_name = device["device_name"]
+            device_address = dev["device_ip"]
+            device_name = dev["device_name"]
             print("Sending " + title + " from stream " + stream + " to device " + device_name + " at IP: " + device_address + "...")
-            reqs.post(device_address + "/new_instructions", json=data)
+            print(r_data)
+            info = reqs.post(device_address + "/new_instructions", json=r_data)
+            print(info)
 
+    return make_response(), 200
 
 
 

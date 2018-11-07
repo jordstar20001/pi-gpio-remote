@@ -34,6 +34,7 @@ max_connect_attempts = config['max_connect_attempts']
 connectionAttempts = 0
 def ConnectToServer():
     global connectionAttempts
+    global device_identifier
     dev_add = device_ip + ":" + str(device_port)
     print("!!!! " + dev_add + " : " + str(type(dev_add)))
     resp = reqs.post(server_address + "/new_device", json= {"device_ip":dev_add,"device_name":device_name})
@@ -95,49 +96,53 @@ def instructions_received():
     else:
         print("Performing " + data['title'] + " from " + data['stream'])
         instructions = data['instructions']
-        for i in range(0, data['loops'] - 1):
-            for instruct in instructions:
-                pin = instruct['pin']
-                component = instruct['component_type']
-                action = instruct['action']
-                delay = instruct['delay']
-                if component == "led":
-                    light = pio.LED(pin)
-                    if action == "ON":
-                        light.on()
+        try:
+            for i in range(0, data['loops'] - 1):
+                for instruct in instructions:
+                    pin = instruct['pin']
+                    component = instruct['component_type']
+                    action = instruct['action']
+                    delay = instruct['delay']
+                    if component == "led":
+                        light = pio.LED(pin)
+                        if action == "ON":
+                            light.on()
 
-                    elif action == "OFF":
-                        light.off()
+                        elif action == "OFF":
+                            light.off()
 
-                    elif action == "TOGGLE":
-                        light.toggle()
+                        elif action == "TOGGLE":
+                            light.toggle()
 
-                elif component == "variled":
-                    light = pio.PWMLED(pin)
-                    if action == "SET":
-                        light.value = instruct['value']
+                    elif component == "variled":
+                        light = pio.PWMLED(pin)
+                        if action == "SET":
+                            light.value = instruct['value']
 
-                elif component == "buzzer":
-                    bz = pio.Buzzer(pin)
-                    if action == "ON":
-                        bz.on()
+                    elif component == "buzzer":
+                        bz = pio.Buzzer(pin)
+                        if action == "ON":
+                            bz.on()
 
-                    elif action == "OFF":
-                        bz.off()
+                        elif action == "OFF":
+                            bz.off()
 
-                    elif action == "TOGGLE":
-                        bz.toggle()
+                        elif action == "TOGGLE":
+                            bz.toggle()
 
-                elif component == "servo":
-                    servo = pio.Servo(pin)
-                    if action == "MIN":
-                        servo.min()
+                    elif component == "servo":
+                        servo = pio.Servo(pin)
+                        if action == "MIN":
+                            servo.min()
 
-                    elif action == "MAX":
-                        servo.max()
+                        elif action == "MAX":
+                            servo.max()
 
-                    elif action == "MID":
-                        servo.mid()
+                        elif action == "MID":
+                            servo.mid()
 
-
+            return make_response(), 200
+        except:
+            print("Ooooops! Something went wrong...")
+            return make_response(), 402
 device.run("0.0.0.0", device_port)
