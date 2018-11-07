@@ -78,7 +78,7 @@ def send_action_to_devices():
             print(r_data)
             try:
                 info = reqs.post(device_address + "/new_instructions", json=r_data, timeout=0.01)
-            except requests.exceptions.ReadTimeout:
+            except reqs.exceptions.ReadTimeout:
                 pass
 
     return make_response(), 200
