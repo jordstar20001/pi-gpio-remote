@@ -2,5 +2,6 @@
   "max_devices":10,
   "streams":[
     "foo"
-  ]
+  ],
+  "port":8080
 }

@@ -5,7 +5,11 @@ from flask import Flask, request, make_response, jsonify
 import requests as reqs
 import json
 
+import time
+
 import gpiozero as pio
+
+device_identifier = ""
 
 # Get config from config.json
 
@@ -18,26 +22,68 @@ streams = config['streams']
 
 server_address = config['server_address']
 
-dev_port = config['this_port']
+device_port = config['this_port']
 
 device_name = config['name']
 
-# Subscribe to the server.
+device_ip = config['this_ip']
 
-reqs.post(server_address + "/new_subscription", {
-    "device_name":device_name,
-    ""
-})
+max_connect_attempts = config['max_connect_attempts']
+
+# Subscribe to the server.
+connectionAttempts = 0
+def ConnectToServer():
+    global connectionAttempts
+    dev_add = device_ip + ":" + str(device_port)
+    print("!!!! " + dev_add + " : " + typeof(dev_add))
+    resp = reqs.post(server_address + "/new_device", data= {"device_ip":dev_add,"device_name":device_name})
+
+    if resp.status_code == 200:
+        device_identifier = resp.json()['id']
+
+    else:
+        connectionAttempts += 1
+        if connectionAttempts >= max_connect_attempts:
+            print("Error. Failed to connect after " + str(max_connect_attempts) + " attempts. Ending session in 5 seconds...")
+            time.sleep(5)
+            quit()
+
+        else:
+            print("Error. Failed to connect to server. Trying again in 3 seconds.")
+            time.sleep(3)
+            ConnectToServer()
+
+ConnectToServer()
+
+at_least_one_stream_hosted = False
+subs = []
+for stream in streams:
+    req = reqs.post(server_address + "/new_subscription", data={
+        "stream":stream,
+        "id":device_identifier
+    })
+    if req.status_code != 200:
+        if at_least_one_stream_hosted or (len(streams) - 1) != streams.index(stream):
+            print("Error. The stream is not being hosted by the server. Trying next stream...")
+
+        else:
+            print("Error. None of the streams are hosted on the server. Ending session in 5 seconds...")
+            time.sleep(5)
+            quit()
+
+    else:
+        subs.append(stream)
+        at_least_one_stream_hosted = True
 
 device = Flask(__name__)
 
 # RUNTIME VARS -----
 
-subs = streams
+
 
 @device.route("/heartbeat", methods=["GET"])
 def heartbeat():
-    return make_response(), 200
+    return make_response(jsonify(config)), 200
 
 @device.route("/new_instructions", methods=["POST"])
 def instructions_received():
@@ -94,4 +140,4 @@ def instructions_received():
                         servo.mid()
 
 
-device.listen("0.0.0.0", dev_port)
+device.run("0.0.0.0", device_port)

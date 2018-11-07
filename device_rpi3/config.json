@@ -6,8 +6,8 @@
   ],
 
 
-  "server_address":"10.0.0.29:8080",
-  "is_lan":true,
-  ""
+  "server_address":"http://172.20.10.14:8080",
+  "max_connect_attempts":3,
+  "this_ip":"http://172.20.10.7",
   "this_port":8080
 }
