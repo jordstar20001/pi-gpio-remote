@@ -94,61 +94,59 @@ def instructions_received():
 
 
     else:
-        try:
-            print("Performing " + data['title'] + " from " + data['stream'])
-            #instructions = data['instructions']
-            print("LOOOOOOOOOOOOOOOOOOP : " + data["loops"])
 
-            for i in range(0, data['loops'] - 1):
-                print("LOOP #" + str(i))
-                for instruct in instructions:
-                    pin = instruct['pin']
-                    component = instruct['component_type']
-                    action = instruct['action']
-                    delay = instruct['delay']
-                    if component == "led":
-                        print("LED!!!!!!!!!!!!!!!!")
-                        light = pio.LED(pin)
-                        if action == "ON":
-                            light.on()
+        print("Performing " + data['title'] + " from " + data['stream'])
+        instructions = data['instructions']
+        #print("LOOOOOOOOOOOOOOOOOOP : " + data["loops"])
 
-                        elif action == "OFF":
-                            light.off()
+        for i in range(0, data['loops'] - 1):
+            print("LOOP #" + str(i))
+            for instruct in instructions:
+                pin = instruct['pin']
+                component = instruct['component_type']
+                action = instruct['action']
+                delay = instruct['delay']
+                if component == "led":
+                    print("LED!!!!!!!!!!!!!!!!")
+                    light = pio.LED(pin)
+                    if action == "ON":
+                        light.on()
 
-                        elif action == "TOGGLE":
-                            light.toggle()
+                    elif action == "OFF":
+                        light.off()
 
-                    elif component == "variled":
-                        light = pio.PWMLED(pin)
-                        if action == "SET":
-                            light.value = instruct['value']
+                    elif action == "TOGGLE":
+                        light.toggle()
 
-                    elif component == "buzzer":
-                        bz = pio.Buzzer(pin)
-                        if action == "ON":
-                            bz.on()
+                elif component == "variled":
+                    light = pio.PWMLED(pin)
+                    if action == "SET":
+                        light.value = instruct['value']
 
-                        elif action == "OFF":
-                            bz.off()
+                elif component == "buzzer":
+                    bz = pio.Buzzer(pin)
+                    if action == "ON":
+                        bz.on()
 
-                        elif action == "TOGGLE":
-                            bz.toggle()
+                    elif action == "OFF":
+                        bz.off()
 
-                    elif component == "servo":
-                        servo = pio.Servo(pin)
-                        if action == "MIN":
-                            servo.min()
+                    elif action == "TOGGLE":
+                        bz.toggle()
 
-                        elif action == "MAX":
-                            servo.max()
+                elif component == "servo":
+                    servo = pio.Servo(pin)
+                    if action == "MIN":
+                        servo.min()
 
-                        elif action == "MID":
-                            servo.mid()
+                    elif action == "MAX":
+                        servo.max()
 
-                    time.sleep(delay / 1000)
+                    elif action == "MID":
+                        servo.mid()
 
-            return make_response(), 200
-        except Exception as e:
-            print("Ooooops! Something went wrong... " + e)
-            return make_response(), 402
+                time.sleep(delay / 1000)
+
+        return make_response(), 200
+
 device.run("0.0.0.0", device_port)

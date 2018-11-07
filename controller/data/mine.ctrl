@@ -8,14 +8,14 @@
       "component_type":"variled",
       "action": "SET",
       "value":1.0,
-      "delay": 2000
+      "delay": 200
     },
     {
       "pin":17,
       "component_type":"variled",
       "action": "SET",
       "value":0.0,
-      "delay": 2000
+      "delay": 0
     }
   ]
 }
