@@ -73,7 +73,7 @@ def send_action_to_devices():
             device_address = device["device_ip"]
             device_name = device["device_name"]
             print("Sending " + title + " from stream " + stream + " to device " + device_name + " at IP: " + device_address + "...")
-            reqs.post(device_address + "/new_instructions", data=data)
+            reqs.post(device_address + "/new_instructions", json=data)
 
 
 

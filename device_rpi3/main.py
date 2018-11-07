@@ -35,8 +35,8 @@ connectionAttempts = 0
 def ConnectToServer():
     global connectionAttempts
     dev_add = device_ip + ":" + str(device_port)
-    print("!!!! " + dev_add + " : " + typeof(dev_add))
-    resp = reqs.post(server_address + "/new_device", data= {"device_ip":dev_add,"device_name":device_name})
+    print("!!!! " + dev_add + " : " + str(type(dev_add)))
+    resp = reqs.post(server_address + "/new_device", json= {"device_ip":dev_add,"device_name":device_name})
 
     if resp.status_code == 200:
         device_identifier = resp.json()['id']
@@ -58,7 +58,7 @@ ConnectToServer()
 at_least_one_stream_hosted = False
 subs = []
 for stream in streams:
-    req = reqs.post(server_address + "/new_subscription", data={
+    req = reqs.post(server_address + "/new_subscription", json={
         "stream":stream,
         "id":device_identifier
     })
